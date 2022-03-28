@@ -27,7 +27,9 @@ The following things are needed:
 
 **Flashing image to Raspberry Pi**
 We start by flashing an image which holds an OS to the Raspberry Pi. We will use an existing image which includes the TensorFlow library, which will make instalation easier.
+
 Download the QEngineering 64-bit Raspberry Pi OS image: https://drive.google.com/file/d/1s8ulI44O96qmVPmWyz8yw3lzamh-32gN/view?usp=sharing
+
 Download and install the image flasher: https://downloads.raspberrypi.org/imager/imager_latest.exe
 
 Insert the storage device into your computer
