@@ -17,4 +17,29 @@ The folders have the following purposes:
 **Trained models**:              Holds several pre-trained models.
 
 # Setup guide
-WIP
+This guide will describe the process of running a pre-trained model onto a new Raspberry Pi 4B.
+The following things are needed:
+-Raspberry Pi 4B + USB-C power supply
+-Minimum 16GB of storage, so either a flashdrive or SD card(Flashdrive preffered due to read-write cycles damaging SD card)
+-Mini displayport -> HDMI/Displayport cable
+-IQaudio Codec Zero ADC HAT
+-Secondary monitor + Keyboard + Mouse for RPI
+
+**Flashing image to Raspberry Pi**
+We start by flashing an image which holds an OS to the Raspberry Pi. We will use an existing image which includes the TensorFlow library, which will make instalation easier.
+Download the QEngineering 64-bit Raspberry Pi OS image: https://drive.google.com/file/d/1s8ulI44O96qmVPmWyz8yw3lzamh-32gN/view?usp=sharing
+Download and install the image flasher: https://downloads.raspberrypi.org/imager/imager_latest.exe
+
+Insert the storage device into your computer
+Open the Raspberry Pi imager
+Go to: Select OS, and scroll down and select the custom image file.
+![image](https://user-images.githubusercontent.com/42100039/160374489-421ad84e-0802-4c09-8e80-84c354f69840.png)
+![image](https://user-images.githubusercontent.com/42100039/160374566-718dac19-fa1b-47c0-a4e5-2a126f687d52.png)
+
+Select the recently downloaded QEngineering Raspberry Pi OS image, and press Open.
+
+Lastly select the right storage device(which should be the inserted SD or flashdrive), and press the write button in the imager. 
+
+Let the process finish, which will result in a flashed storage device.
+
+
