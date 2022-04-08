@@ -1,0 +1,2 @@
+ModelName,Test split accuracy,CNN,Dataset,TF_Version,Data augmentation percentage,Time shift percentage,Noise addition percentage,Noise SNR,Normalize Spectrogram,Sample Rate,Window length(Spectro),Hop length(Spectro),NFFT size,Epochs,Batch size,Comments
+V5.0_simpleCNN_MSWC_blue-red-unknown_spectrogram_05-04-2022,0.9641076769690927,simpleCNN,MSWC,2.8.0,0.25,0.5,0.3,10,False,16000,256,128,256,60,64,"Normal 1D spectrogram 129x124, from_logits=True in sparsecatagoricalAccuracy"
