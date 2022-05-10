@@ -1,0 +1,35 @@
+-------------------------------------------------------------------------------------------------------------
+Nog te kopen
+
+1x 3-pos, aan-neutraal-uit tuimelschakelaar: https://www.robotshop.com/be/nl/momentary-manual-dpdt-tuimelschakelaar.html
+1x 2-pos, aan-uit tuimelschakelaar: https://www.kiwi-electronics.nl/nl/aan-uit-tuimelschakelaar-rood-3630?search=rocker
+1x Drukknop met LED: https://www.kiwi-electronics.nl/nl/16mm-drukknop-met-led-puls-groen-2179
+1x5 WS2812B 5mm LED's, 3 daadwerkelijk nodig: https://opencircuit.shop/product/NeoPixel-Diffused-5mm-Through-Hole-LED
+3x LED Panel Houder/mount: https://www.tinytronics.nl/shop/nl/componenten/led's/accessoires/5mm-led-houder-metaal
+
+1x TB6612 H-Bridge: https://www.kiwi-electronics.nl/nl/adafruit-tb6612-1-2a-dc-stepper-motor-driver-breakout-board-2188
+1x I2C IO expander: https://www.tinytronics.nl/shop/nl/communicatie-en-signalen/io-converters/pcf8574-i2c-io-expander
+
+3x Transistor NPN(general purpose): https://www.tinytronics.nl/shop/nl/componenten/transistoren/npn-transistor-2n3904 
+2x Transistor MOSFET-N (Toggle power + motor/LEDS):https://www.kiwi-electronics.nl/nl/n-channel-power-mosfet-irlb8721-397?search=mosfet
+8x Resistors (1x 5K, 3x 1K, 1x 10K, 1x 100, 2x 500): -
+3x Diode: https://www.tinytronics.nl/shop/nl/componenten/diodes/diode-1n4007
+2x Capacitor(Decouple): https://www.tinytronics.nl/shop/nl/componenten/condensatoren/100nf-50v-ceramische-condensator
+
+1x Powerbank, elke powerbank >10.000mAH en meerdere poorten goed: https://www.mediamarkt.nl/nl/product/_hama-187261a-power-pack-pd10-hd-antraciet-1714846.html
+1x Connector GX12-5 5-pin M+F: https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/connectoren/gx/gx12/gx12-5-connector-set
+
+2x1m Cable sleeve(To bundle outgoing cables), kon het niet vinden bij de andere winkels:https://nl.rs-online.com/web/p/cable-sleeves/0408209 
+											https://www.123-3d.nl/123-3D-Vlechtkous-4-mm-zwart-1-meter-i5043-t13165.html
+											 
+1x Type C connector oplaad poort: https://opencircuit.shop/product/usb-2.0-type-c-connector-breakout-board
+2x USB-C to loose wire stroomkabel(Powerbank -> oplaadpoort, Relay -> RPI): https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/kabels-en-adapters/usb/usb-c/usb-c-stroomkabel-met-losse-draden-en-hoek-30cm?sort=p.price&order=ASC
+2x USB-A Male connector(Output powerbank): https://www.tinytronics.nl/shop/nl/kabels-en-connectoren/connectoren/usb/usb-a-connector-diy-male
+
+1x Raspberry Pi 4b(Gebruik nu eigen RPI): 
+-------------------------------------------------------------------------------------------------------------
+Al gekocht
+
+1x Minimaal 16 GB storage (USB flashdrive(betere levensduur) of sd kaart(minder stroomverbruik))
+1x IQaudIO CODEC Zero
+1x ETM-008 Uni-directional microphone
