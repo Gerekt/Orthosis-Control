@@ -1,5 +1,4 @@
-#commands = ['up', 'stop', 'no', 'right', 'left', 'down', 'go', 'off', 'on', 'yes', '_unknown_'] #Has to be done this way in order to keep the order of commands
-commands = ['blue', 'red', '_unknown_']
+commands = ['blue', 'red', '_unknown_'] #Network is trained with commands in alphabetical order, enter the commands that were used during training here
 
 import os, sys
 import pwd
@@ -14,7 +13,9 @@ import tensorflow as tf
 from numpy.lib.shape_base import expand_dims
 from gpiozero import Button, Motor
 
-from wavToSpectrogram import get_spectrogram, get_mfcc, get_tflite_spectrogram, get_scipy_spectrogram, get_spectrogram_inference
+from wavToSpectrogram import get_scipy_spectrogram
+
+modelName = "modelV5.tflite" #Name and path of model that will be used, program currently only accepts tflite models(Can be changed easily)
 
 callbackTimeTracker = []
 resampleTimeTracker = []
@@ -68,14 +69,15 @@ def displayTimes(arrayQueueTime, arrayWindowTime, arrayFeatureTime, arrayPredict
 
 
 def loadModel():
-    if os.path.isfile("model.tflite") != True:
+    global modelName
+    if os.path.isfile(modelName) != True:
         print("Model path not found")
         return False
     else:
         Interpreter = tf.lite.Interpreter
         load_delegate = tf.lite.experimental.load_delegate
 
-        model = Interpreter(model_path="model.tflite")
+        model = Interpreter(model_path=modelName) #Looks for tfllite model in this folder
         model.allocate_tensors()
         input_details = model.get_input_details()
         output_details = model.get_output_details()
@@ -141,10 +143,10 @@ def classificationQueue(*, q, dataWindow, HL):
 class classAudio:
     def __init__(self, FL, HL):
         print("class audio init")
-        self.device = "default"  #RPI
-        self.samplerate = 44100
-        self.downsamplerate = 16000
-        self.downsample = int((self.samplerate/self.downsamplerate))
+        self.device = "default"  #Device which will be used for the microphone input
+        self.samplerate = 44100 #Native samplerate of the microphone/ADC, 16kHz would be preferable but was unable to get this to work
+        self.downsamplerate = 16000 #Samplerate which will be used for spectrograms, needs to be the same as was used during training.
+        self.downsample = int((self.samplerate/self.downsamplerate)) #Downsample ratio
         self.mapping = 0                                # First channel has index 0
         self.HL = HL
 
@@ -227,7 +229,7 @@ class Test:
     def startstopMic(self):
         if self.toStart == True:
             print("start test")
-            self.FL = 1
+            self.FL = 1 #Initialization of the Frame and hoplength. Model V5.0 is trained using 1 secocond framelength. Hoplength may be changed regardless of framelength during training
             self.HL = 0.5
             print("Initialize class audio")
             self.Insta = classAudio(self.FL, self.HL)
@@ -241,27 +243,16 @@ class Test:
         self.toStart = newStatus
         print("status set to: ", newStatus)
 
-def startTest():
-    print("start test")
-    FL = 1
-    HL = 0.5
-    print("Initialize class audio")
-    Insta = classAudio(FL, HL)
-    print("start Mic control")
-    Insta.startMicControl()
-
-
 print("ik ben de main, aan het beginnen:")
 listDevices()
 print("Init test")
 testObject = Test
-#startTest()
 testObject.setStatus(testObject, True)
 testObject.startstopMic(testObject)
 mainStartTime = time.time()
 
 while True:
-    if (time.time() - mainStartTime) > 20:
+    if (time.time() - mainStartTime) > 20: #Currently the program shutsdown after 20 seconds, change this look for unlimited runtime
         print("Stopping")
         testObject.setStatus(testObject, False)
         testObject.startstopMic(testObject)
