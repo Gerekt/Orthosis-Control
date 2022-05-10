@@ -2,6 +2,7 @@
 commands = ['blue', 'red', '_unknown_']
 
 import os, sys
+import pwd
 import numpy as np
 import sounddevice as sd
 import time
@@ -11,12 +12,37 @@ import threading
 from scipy import signal
 import tensorflow as tf
 from numpy.lib.shape_base import expand_dims
+from gpiozero import Button, Motor
 
 from wavToSpectrogram import get_spectrogram, get_mfcc, get_tflite_spectrogram, get_scipy_spectrogram, get_spectrogram_inference
 
 callbackTimeTracker = []
 resampleTimeTracker = []
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #Ignores message that a certain instruction set is not used.
+
+micActivation = Button(5)
+orthosisMotor = Motor(6, 12)
+activationTime  = 15
+lastActivationTime = 0
+
+def micActivator():
+    global lastActivationTime
+    print()
+    print("Mic activation pressed!")
+    lastActivationTime = timeit.default_timer()
+    print(lastActivationTime)
+
+def moveOrthosis(prediction):
+    global orthosisMotor
+    if prediction == "_unknown_":
+        print("Unknown, not moving")
+        return
+    elif prediction == "red":
+        print("red, moving backward")
+        orthosisMotor.backward()
+    elif prediction == "blue":
+        print("blue, moving forward")
+        orthosisMotor.forward()
 
 def listDevices():
     print("list devices")
@@ -65,6 +91,8 @@ def performInference(model, featuresAudio, input_details, output_details):
     return commands[output_data.argmax()]
 
 def classificationQueue(*, q, dataWindow, HL):
+    global lastActivationTime
+    global activationTime
     print("start classificaiton queue")
     emptyCounter = 0
     arrayQueueTime = []
@@ -82,48 +110,30 @@ def classificationQueue(*, q, dataWindow, HL):
     while getattr(t, "do_run", True):
         try:
             startTime = timeit.default_timer()
-            #print("Time at start prediction is: ", startTime)
-            #print("get attribute succes now replacing window....")
-            #print("queue length: ", q.qsize())
-            #print("Queue time before get is: ", timeit.default_timer())
             data = q.get(True, 1) # Wait until full hoplength of samples is ready in queue, waits no longer than 1 sec
-            #print("Queue time after get is:: ", timeit.default_timer())
             arrayQueueTime.append(timeit.default_timer() - startTime)
-
-            #shift = len(data)
-            #print("length of data is: ", shift)
             windowStartTime = timeit.default_timer()
             shift = len(data)
             dataWindow = np.roll(dataWindow, -shift)            # dataWindow is total window length over which the features are calculated
             dataWindow[-shift:] = data
             arrayWindowTime.append(timeit.default_timer() - windowStartTime)                                  # new incoming raw microphone data is added to window
-            #print("Time needed to replace window in ms: ", (timeit.default_timer() - windowsStartTime)*1000)
-            #print("Window replaced")
-            #arrayCopyTime.append(timeit.default_timer() - windowsStartTime)
-            #displayTimes(arrayCopyTime, HL, timeStart)
-            #arrayCopyTime = [] 
-            
-            featureStartTime = timeit.default_timer()
-            featuresAudio = get_scipy_spectrogram(dataWindow)
-            #featuresAudio = get_mfcc(dataWindow)
-            arrayFeatureTime.append(timeit.default_timer() - featureStartTime)
-            #featuresAudio = np.max(dataWindow)    # calculate features
-            #print("Audio features/spectrogram made: ")
-            #print("Audio features/max: ", featuresAudio)
-            
-            predictionStartTime = timeit.default_timer()
-            prediction = performInference(model, featuresAudio, input_details, output_details)
-            arrayPredictionTime.append(timeit.default_timer() - predictionStartTime)
-            print("Prediction made, prediction: ", prediction)
 
+            if timeit.default_timer() <= lastActivationTime + activationTime:
+                featureStartTime = timeit.default_timer()
+                featuresAudio = get_scipy_spectrogram(dataWindow)
+                arrayFeatureTime.append(timeit.default_timer() - featureStartTime)
+                predictionStartTime = timeit.default_timer()
+                prediction = performInference(model, featuresAudio, input_details, output_details)
+                arrayPredictionTime.append(timeit.default_timer() - predictionStartTime)
+                print("Prediction made, prediction: ", prediction)
+                moveOrthosis(prediction)
+            else:
+                print("Mic not activated, no prediction made")
             #displayTimes(arrayQueueTime, arrayWindowTime, arrayFeatureTime, arrayPredictionTime, startTime)
-            #print("Total time needed for prediction in ms: ", (timeit.default_timer()-startTime) * 1000)
-            #print("Time after prediction is: ", timeit.default_timer())
             arrayQueueTime = []
             arrayWindowTime = []
             arrayFeatureTime = []
             arrayPredictionTime = []
-
         except queue.Empty:
             emptyCounter = emptyCounter + 1
             #print("empty counter is: ", emptyCounter)
@@ -131,8 +141,6 @@ def classificationQueue(*, q, dataWindow, HL):
 class classAudio:
     def __init__(self, FL, HL):
         print("class audio init")
-        #self.device = 16 #Desktop microphone
-        #self.device = 14 #Laptop microphone
         self.device = "default"  #RPI
         self.samplerate = 44100
         self.downsamplerate = 16000
